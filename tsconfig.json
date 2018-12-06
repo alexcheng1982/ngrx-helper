@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngrx-helper": [
+        "dist/ngrx-helper"
+      ],
+      "ngrx-helper/*": [
+        "dist/ngrx-helper/*"
+      ]
+    }
   }
 }

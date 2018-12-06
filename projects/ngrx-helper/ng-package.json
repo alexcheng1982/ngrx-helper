@@ -1,0 +1,15 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ngrx-helper",
+  "lib": {
+    "entryFile": "src/public_api.ts",
+    "umdModuleIds": {
+      "@angular/common": "@angular/common",
+      "@angular/core": "@angular/core",
+      "@ngrx/effects": "@ngrx/effects",
+      "@ngrx/entity": "@ngrx/entity",
+      "@ngrx/store": "@ngrx/store",
+      "uuid/v1": "uuid"
+    }
+  }
+}
