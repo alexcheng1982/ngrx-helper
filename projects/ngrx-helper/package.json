@@ -1,6 +1,18 @@
 {
   "name": "@vividcode/ngrx-helper",
-  "version": "0.1.0",
+  "version": "0.1.2",
+  "author": {
+    "name": "Fu Cheng"
+  },
+  "bugs": {
+    "url": "https://github.com/alexcheng1982/ngrx-helper/issues"
+  },
+  "homepage": "https://github.com/alexcheng1982/ngrx-helper#readme",
+  "keywords": [
+    "NgRx",
+    "Angular"
+  ],
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^7.1.0",
     "@angular/core": "^7.1.0",
@@ -8,5 +20,9 @@
     "@ngrx/entity": "^6.1.2",
     "@ngrx/store": "^6.1.2",
     "uuid": "^3.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexcheng1982/ngrx-helper.git"
   }
 }
