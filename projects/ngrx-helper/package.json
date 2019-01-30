@@ -1,6 +1,6 @@
 {
   "name": "@vividcode/ngrx-helper",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": {
     "name": "Fu Cheng"
   },
@@ -16,9 +16,9 @@
   "peerDependencies": {
     "@angular/common": ">=6.0.0",
     "@angular/core": ">=6.0.0",
-    "@ngrx/effects": "^6.1.2",
-    "@ngrx/entity": "^6.1.2",
-    "@ngrx/store": "^6.1.2",
+    "@ngrx/effects": ">=6.1.2",
+    "@ngrx/entity": ">=6.1.2",
+    "@ngrx/store": ">=6.1.2",
     "uuid": "^3.3.2"
   },
   "repository": {
