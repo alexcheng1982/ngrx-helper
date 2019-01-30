@@ -1,15 +1,15 @@
 import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { ReducerHelper, reducerHelperFactory } from './reducer';
 import { Store, StoreModule } from '@ngrx/store';
-import { actionHelperFactory } from './action';
+import { actionHelperFactory, ActionHelper } from './action';
 import { Actions } from '@ngrx/effects';
-import { effectsHelperFactory } from './effects';
+import { effectsHelperFactory, EffectsHelper } from './effects';
 import { selectorHelperFactory } from './selector';
 
 export interface Tokens {
-  action: InjectionToken<any>;
+  action: InjectionToken<ActionHelper>;
   reducer: InjectionToken<ReducerHelper<any, any>>;
-  effects: InjectionToken<any>;
+  effects: InjectionToken<EffectsHelper>;
   selector: InjectionToken<any>;
 }
 
@@ -23,7 +23,6 @@ export class NgrxHelperModule {
   static forFeature(name: string, tokens: Tokens): ModuleWithProviders {
     const reducerHelper = reducerHelperFactory(name);
     const storeModuleProviders = StoreModule.forFeature(name, reducerHelper.reducer);
-    const actionHelper = actionHelperFactory(name);
     return {
       ngModule: storeModuleProviders.ngModule,
       providers: [
@@ -34,12 +33,16 @@ export class NgrxHelperModule {
         },
         {
           provide: tokens.action,
-          useValue: actionHelper,
+          useFactory: store => actionHelperFactory(name, store),
+          deps: [
+            Store,
+          ],
         },
         {
           provide: tokens.effects,
-          useFactory: (action$: Actions) => effectsHelperFactory(name, actionHelper, action$),
+          useFactory: (actionHelper, action$: Actions) => effectsHelperFactory(name, actionHelper, action$),
           deps: [
+            tokens.action,
             Actions,
           ],
         },
