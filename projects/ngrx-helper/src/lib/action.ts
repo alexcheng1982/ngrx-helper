@@ -62,7 +62,7 @@ const actionId = () => uuid();
 const actionType = (name: string, requestType: RequestType, storeActionType: StoreActionType) =>
   `NgRxHelper_${name}_${RequestType[requestType]}_${StoreActionType[storeActionType]}`;
 
-const createRequestAction = <R>(requestType: RequestType, request: R = null): SendRequestAction<R> => ({
+const createRequestAction = <R>(name: string, requestType: RequestType, request: R = null): SendRequestAction<R> => ({
   id: actionId(),
   type: actionType(name, requestType, StoreActionType.REQUEST),
   [SymbolEntity]: name,
@@ -71,7 +71,9 @@ const createRequestAction = <R>(requestType: RequestType, request: R = null): Se
   payload: request,
 });
 
-const createSuccessAction = <T, R>(data: T[] | T | string, requestAction: SendRequestAction<R>): RequestSuccessAction<T, R> => ({
+const createSuccessAction = <T, R>(name: string,
+                                   data: T[] | T | string,
+                                   requestAction: SendRequestAction<R>): RequestSuccessAction<T, R> => ({
   id: actionId(),
   type: actionType(name, requestAction[SymbolRequestType], StoreActionType.SUCCESS),
   [SymbolRequest]: requestAction,
@@ -80,7 +82,7 @@ const createSuccessAction = <T, R>(data: T[] | T | string, requestAction: SendRe
   payload: data,
 });
 
-const createErrorAction = <E, R>(error: E, requestAction: SendRequestAction<R>): RequestErrorAction<R, E> => ({
+const createErrorAction = <E, R>(name: string, error: E, requestAction: SendRequestAction<R>): RequestErrorAction<R, E> => ({
   id: actionId(),
   type: actionType(name, requestAction[SymbolRequestType], StoreActionType.ERROR),
   [SymbolRequest]: requestAction,
@@ -92,9 +94,17 @@ const createErrorAction = <E, R>(error: E, requestAction: SendRequestAction<R>):
 export const actionHelperFactory = <T, E>(name: string, store: Store<any>) => {
   return {
     isSendRequestAction,
-    requestAction: createRequestAction,
-    successAction: createSuccessAction,
-    errorAction: createErrorAction,
+    requestAction<R>(requestType: RequestType, request: R = null) {
+      return createRequestAction(name, requestType, request);
+    },
+
+    successAction<R>(data: T[] | T | string, requestAction: SendRequestAction<R>) {
+      return createSuccessAction(name, data, requestAction);
+    },
+
+    errorAction<R>(error: E, requestAction: SendRequestAction<R>) {
+      return createErrorAction(name, error, requestAction);
+    },
 
     clearActionErrorAction(action: StoreAction | string) {
       return {
@@ -106,15 +116,15 @@ export const actionHelperFactory = <T, E>(name: string, store: Store<any>) => {
     },
 
     sendRequestAction<R>(requestType: RequestType, request: R = null) {
-      store.dispatch(createRequestAction(requestType, request));
+      store.dispatch(createRequestAction(name, requestType, request));
     },
 
     sendSuccessAction<R>(data: T[] | T | string, requestAction: SendRequestAction<R>) {
-      store.dispatch(createSuccessAction(data, requestAction));
+      store.dispatch(createSuccessAction(name, data, requestAction));
     },
 
     sendErrorAction<R>(error: E, requestAction: SendRequestAction<R>) {
-      store.dispatch(createErrorAction(error, requestAction));
+      store.dispatch(createErrorAction(name, error, requestAction));
     }
 
   } as ActionHelper;
