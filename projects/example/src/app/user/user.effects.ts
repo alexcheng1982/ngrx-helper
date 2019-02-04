@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@angular/core';
 import { EffectsHelper } from '@vividcode/ngrx-helper';
 import { UserService } from './user.service';
 import { Effect } from '@ngrx/effects';
-import { UserTokenEffect } from './ngrx-tokens';
+import { UserTokenEffects } from './ngrx-tokens';
 
 @Injectable()
 export class UserEffects {
-  constructor(@Inject(UserTokenEffect) private effectsHelper: EffectsHelper<any>,
+  constructor(@Inject(UserTokenEffects) private effectsHelper: EffectsHelper<any>,
               private userService: UserService) {
   }
 

@@ -10,7 +10,7 @@ import { UserEffects } from './user.effects';
 import {
   featureName,
   UserTokenAction,
-  UserTokenEffect,
+  UserTokenEffects,
   UserTokenName,
   UserTokenReducer,
   UserTokenSelector
@@ -27,7 +27,7 @@ export const reducerToken = new InjectionToken('reducer');
     NgRxHelperModule.forFeature(featureName, reducerToken, {
       name: UserTokenName,
       action: UserTokenAction,
-      effects: UserTokenEffect,
+      effects: UserTokenEffects,
       reducer: UserTokenReducer,
       selector: UserTokenSelector,
     }),
