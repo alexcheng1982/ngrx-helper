@@ -1,7 +1,6 @@
-import {Entity, ReducerHelper, State} from './reducer';
-import {createFeatureSelector, createSelector, select, Selector, Store} from '@ngrx/store';
-import {Dictionary} from '@ngrx/entity';
-import {Observable} from 'rxjs';
+import { Entity, ReducerHelper, SelectorHelper, State } from './common';
+import { createFeatureSelector, createSelector, select, Store } from '@ngrx/store';
+
 
 export function createSelectorHelper<T extends Entity, E>(name: string,
                                                           reducerHelper: ReducerHelper<T, E>,
@@ -68,19 +67,4 @@ export function createSelectorHelper<T extends Entity, E>(name: string,
     isActionLoading: (action: any) => store.pipe(select(isActionLoadingSelector(action))),
     actionError: (action: any) => store.pipe(select(actionErrorSelector(action))),
   };
-}
-
-export interface SelectorHelper<T extends Entity, E> {
-  entitiesSelectAllSelector: Selector<State<T, E>, T[]>;
-  entitiesSelectEntitiesSelector: Selector<State<T, E>, Dictionary<T>>;
-  entitiesSelectIdsSelector: Selector<State<T, E>, number[] | string[]>;
-  entitiesSelectTotalSelector: Selector<State<T, E>, number>;
-  isActionLoadingSelector: (any) => Selector<State<T, E>, boolean>;
-  actionErrorSelector: (any) => Selector<State<T, E>, E>;
-  entitiesSelectAll: Observable<T[]>;
-  entitiesSelectEntities: Observable<Dictionary<T>>;
-  entitiesSelectIds: Observable<number[] | string[]>;
-  entitiesSelectTotal: Observable<number>;
-  isActionLoading: (any) => Observable<boolean>;
-  actionError: (action) => Observable<E>;
 }

@@ -1,55 +1,20 @@
-import {Action, Store} from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import uuid from 'uuid/v1';
-import {Observable} from 'rxjs';
+import {
+  ActionHelper,
+  isStoreAction,
+  RequestErrorAction,
+  RequestSuccessAction,
+  RequestType,
+  SendRequestAction,
+  StoreAction,
+  StoreActionType,
+  SymbolEntity,
+  SymbolRequest,
+  SymbolRequestType,
+  SymbolStoreActionType,
+} from './common';
 
-export type RequestSender<T, R> = (request: R) => Observable<T[] | T | string>;
-
-export enum StoreActionType {
-  REQUEST,
-  SUCCESS,
-  ERROR,
-  INTERNAL,
-}
-
-export enum RequestType {
-  LIST,
-  GET,
-  CREATE,
-  UPDATE,
-  DELETE,
-}
-
-export const SymbolEntity = Symbol('Entity');
-export const SymbolRequestType = Symbol('Request type');
-export const SymbolRequest = Symbol('Request action');
-export const SymbolStoreActionType = Symbol('Store action type');
-
-export interface StoreAction extends Action {
-  id: string;
-  [SymbolEntity]: string;
-  [SymbolStoreActionType]: StoreActionType;
-}
-
-export interface SendRequestAction<R> extends StoreAction {
-  [SymbolRequestType]: RequestType;
-  payload: R;
-}
-
-interface RequestResultAction<R> extends StoreAction {
-  [SymbolRequest]: SendRequestAction<R>;
-}
-
-export interface RequestSuccessAction<T, R> extends RequestResultAction<R> {
-  payload: T[] | T | string;
-}
-
-export interface RequestErrorAction<R, E> extends RequestResultAction<R> {
-  payload: E;
-}
-
-export const isStoreAction = (name: string, action: any) => {
-  return action && action.hasOwnProperty(SymbolStoreActionType) && (action as StoreAction)[SymbolEntity] === name;
-};
 
 const isSendRequestAction = (name: string, action: any, requestType: RequestType) => {
   return isStoreAction(name, action)
@@ -94,15 +59,15 @@ const createErrorAction = <E, R>(name: string, error: E, requestAction: SendRequ
 export function createActionHelper<T, E>(name: string, store: Store<any>): ActionHelper<T, E> {
   return {
     isSendRequestAction,
-    requestAction<R>(requestType: RequestType, request: R = null) {
+    createRequestAction<R>(requestType: RequestType, request: R = null): SendRequestAction<R> {
       return createRequestAction(name, requestType, request);
     },
 
-    successAction<R>(data: T[] | T | string, requestAction: SendRequestAction<R>) {
+    createSuccessAction<R>(data: T[] | T | string, requestAction: SendRequestAction<R>): RequestSuccessAction<T, R> {
       return createSuccessAction(name, data, requestAction);
     },
 
-    errorAction<R>(error: E, requestAction: SendRequestAction<R>) {
+    createErrorAction<R>(error: E, requestAction: SendRequestAction<R>): RequestErrorAction<R, E> {
       return createErrorAction(name, error, requestAction);
     },
 
@@ -115,28 +80,23 @@ export function createActionHelper<T, E>(name: string, store: Store<any>): Actio
       };
     },
 
-    sendRequestAction<R>(requestType: RequestType, request: R = null) {
-      store.dispatch(createRequestAction(name, requestType, request));
+    sendRequestAction<R>(requestType: RequestType, request?: R): SendRequestAction<R> {
+      const action = createRequestAction(name, requestType, request);
+      store.dispatch(action);
+      return action;
     },
 
-    sendSuccessAction<R>(data: T[] | T | string, requestAction: SendRequestAction<R>) {
-      store.dispatch(createSuccessAction(name, data, requestAction));
+    sendSuccessAction<R>(data: T[] | T | string, requestAction: SendRequestAction<R>): RequestSuccessAction<T, R> {
+      const action = createSuccessAction(name, data, requestAction);
+      store.dispatch(action);
+      return action;
     },
 
-    sendErrorAction<R>(error: E, requestAction: SendRequestAction<R>) {
-      store.dispatch(createErrorAction(name, error, requestAction));
+    sendErrorAction<R>(error: E, requestAction: SendRequestAction<R>): RequestErrorAction<R, E> {
+      const action = createErrorAction(name, error, requestAction);
+      store.dispatch(action);
+      return action;
     }
 
   };
-}
-
-export interface ActionHelper<T, E> {
-  isSendRequestAction: (name: string, action: any, requestType: RequestType) => boolean;
-  requestAction: <R>(requestType: RequestType, request: R) => SendRequestAction<R>;
-  successAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => RequestSuccessAction<T, R>;
-  errorAction: <R>(error: E, requestAction: SendRequestAction<R>) => RequestErrorAction<R, E>;
-  clearActionErrorAction: (action: StoreAction | string) => any;
-  sendRequestAction: <R>(requestType: RequestType, request: R) => void;
-  sendSuccessAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => void;
-  sendErrorAction: <R>(error: E, requestAction: SendRequestAction<R>) => void;
 }

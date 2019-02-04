@@ -19,10 +19,10 @@
       "dom"
     ],
     "paths": {
-      "ngrx-helper": [
+      "@vividcode/ngrx-helper": [
         "dist/ngrx-helper"
       ],
-      "ngrx-helper/*": [
+      "@vividcode/ngrx-helper/*": [
         "dist/ngrx-helper/*"
       ]
     }

@@ -1,5 +1,6 @@
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
+  Entity,
   isStoreAction,
   RequestErrorAction,
   RequestSuccessAction,
@@ -9,22 +10,11 @@ import {
   SymbolRequest,
   SymbolRequestType,
   SymbolStoreActionType,
-} from './action';
+  ReducerHelper,
+  ActionStatus,
+  State,
+} from './common';
 
-export interface Entity {
-  id: string;
-}
-
-export interface ActionStatus<E> {
-  action: StoreAction;
-  loading?: boolean;
-  error?: E;
-}
-
-export interface State<T extends Entity, E> {
-  entities: EntityState<T>;
-  actions: EntityState<ActionStatus<E>>;
-}
 
 export function createReducerHelper<T extends Entity, E>(name: string): ReducerHelper<T, E> {
   const entitiesAdapter = createEntityAdapter<T>({
@@ -118,10 +108,3 @@ export function createReducerHelper<T extends Entity, E>(name: string): ReducerH
     }
   };
 }
-
-export interface ReducerHelper<T extends Entity, E> {
-  reducer: (state: State<T, E>, action: any) => State<T, E>;
-  entitiesAdapter: EntityAdapter<T>;
-  actionsAdapter: EntityAdapter<ActionStatus<E>>;
-}
-
