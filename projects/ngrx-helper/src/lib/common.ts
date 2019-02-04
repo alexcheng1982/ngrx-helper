@@ -83,7 +83,7 @@ export interface ReducerHelper<T extends Entity, E> {
 
 export interface ActionHelper<T, E> {
   isSendRequestAction: (name: string, action: any, requestType: RequestType) => boolean;
-  createRequestAction: <R>(requestType: RequestType, request: R) => SendRequestAction<R>;
+  createRequestAction: <R>(requestType: RequestType, request?: R) => SendRequestAction<R>;
   createSuccessAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => RequestSuccessAction<T, R>;
   createErrorAction: <R>(error: E, requestAction: SendRequestAction<R>) => RequestErrorAction<R, E>;
   clearActionErrorAction: (action: StoreAction | string) => any;
