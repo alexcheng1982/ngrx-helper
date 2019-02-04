@@ -3,7 +3,9 @@ import {createFeatureSelector, createSelector, select, Selector, Store} from '@n
 import {Dictionary} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 
-export const selectorHelperFactory = <T extends Entity, E>(name: string, reducerHelper: ReducerHelper<T, E>, store: Store<any>) => {
+export function createSelectorHelper<T extends Entity, E>(name: string,
+                                                          reducerHelper: ReducerHelper<T, E>,
+                                                          store: Store<any>): SelectorHelper<T, E> {
   const featureSelector = createFeatureSelector<State<T, E>>(name);
   const entitiesSelector = createSelector(
     featureSelector,
@@ -65,8 +67,8 @@ export const selectorHelperFactory = <T extends Entity, E>(name: string, reducer
     entitiesSelectTotal: store.pipe(select(entitiesSelectTotalSelector)),
     isActionLoading: (action: any) => store.pipe(select(isActionLoadingSelector(action))),
     actionError: (action: any) => store.pipe(select(actionErrorSelector(action))),
-  } as SelectorHelper<T, E>;
-};
+  };
+}
 
 export interface SelectorHelper<T extends Entity, E> {
   entitiesSelectAllSelector: Selector<State<T, E>, T[]>;

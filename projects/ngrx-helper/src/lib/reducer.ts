@@ -1,4 +1,4 @@
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {
   isStoreAction,
   RequestErrorAction,
@@ -26,7 +26,7 @@ export interface State<T extends Entity, E> {
   actions: EntityState<ActionStatus<E>>;
 }
 
-export const reducerHelperFactory = function <T extends Entity, E>(name: string): ReducerHelper<T, E> {
+export function createReducerHelper<T extends Entity, E>(name: string): ReducerHelper<T, E> {
   const entitiesAdapter = createEntityAdapter<T>({
     selectId: model => model.id,
   });
@@ -117,7 +117,7 @@ export const reducerHelperFactory = function <T extends Entity, E>(name: string)
       }
     }
   };
-};
+}
 
 export interface ReducerHelper<T extends Entity, E> {
   reducer: (state: State<T, E>, action: any) => State<T, E>;

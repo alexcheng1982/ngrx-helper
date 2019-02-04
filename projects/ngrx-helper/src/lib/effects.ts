@@ -1,10 +1,10 @@
-import { RequestSender, RequestType, SendRequestAction } from './action';
-import { catchError, filter, map, mergeMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { Actions } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import {RequestSender, RequestType, SendRequestAction} from './action';
+import {catchError, filter, map, mergeMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {Actions} from '@ngrx/effects';
+import {Action} from '@ngrx/store';
 
-export const effectsHelperFactory = <T>(name: string, actionHelper: any, actions$: Actions) => {
+export function createEffectsHelper<T>(name: string, actionHelper: any, actions$: Actions): EffectsHelper<T> {
 
   const effect = <R>(requestType: RequestType, requestSender: RequestSender<T, R>): Observable<Action> => {
     return actions$.pipe(
@@ -36,13 +36,13 @@ export const effectsHelperFactory = <T>(name: string, actionHelper: any, actions
     deleteEffect<R>(requestSender: RequestSender<T, R>) {
       return effect(RequestType.DELETE, requestSender);
     },
-  } as EffectsHelper;
-};
+  };
+}
 
-export interface EffectsHelper {
-  listEffect: <T, R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  getEffect: <T, R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  createEffect: <T, R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  updateEffect: <T, R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  deleteEffect: <T, R>(requestSender: RequestSender<T, R>) => Observable<Action>;
+export interface EffectsHelper<T> {
+  listEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
+  getEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
+  createEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
+  updateEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
+  deleteEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
 }

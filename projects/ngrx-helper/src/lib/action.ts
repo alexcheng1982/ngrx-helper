@@ -2,7 +2,7 @@ import {Action, Store} from '@ngrx/store';
 import uuid from 'uuid/v1';
 import {Observable} from 'rxjs';
 
-export type RequestSender<T, R> = (action: R) => Observable<T[] | T | string>;
+export type RequestSender<T, R> = (request: R) => Observable<T[] | T | string>;
 
 export enum StoreActionType {
   REQUEST,
@@ -91,7 +91,7 @@ const createErrorAction = <E, R>(name: string, error: E, requestAction: SendRequ
   payload: error,
 });
 
-export const actionHelperFactory = <T, E>(name: string, store: Store<any>) => {
+export function createActionHelper<T, E>(name: string, store: Store<any>): ActionHelper<T, E> {
   return {
     isSendRequestAction,
     requestAction<R>(requestType: RequestType, request: R = null) {
@@ -127,16 +127,16 @@ export const actionHelperFactory = <T, E>(name: string, store: Store<any>) => {
       store.dispatch(createErrorAction(name, error, requestAction));
     }
 
-  } as ActionHelper;
-};
+  };
+}
 
-export interface ActionHelper {
+export interface ActionHelper<T, E> {
   isSendRequestAction: (name: string, action: any, requestType: RequestType) => boolean;
   requestAction: <R>(requestType: RequestType, request: R) => SendRequestAction<R>;
-  successAction: <T, R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => RequestSuccessAction<T, R>;
-  errorAction: <E, R>(error: E, requestAction: SendRequestAction<R>) => RequestErrorAction<R, E>;
+  successAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => RequestSuccessAction<T, R>;
+  errorAction: <R>(error: E, requestAction: SendRequestAction<R>) => RequestErrorAction<R, E>;
   clearActionErrorAction: (action: StoreAction | string) => any;
   sendRequestAction: <R>(requestType: RequestType, request: R) => void;
-  sendSuccessAction: <T, R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => void;
-  sendErrorAction: <E, R>(error: E, requestAction: SendRequestAction<R>) => void;
+  sendSuccessAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => void;
+  sendErrorAction: <R>(error: E, requestAction: SendRequestAction<R>) => void;
 }
