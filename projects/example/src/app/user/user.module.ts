@@ -1,4 +1,4 @@
-import { InjectionToken, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { UserRoutingModule } from './user-routing.module';
@@ -9,29 +9,27 @@ import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './user.effects';
 import {
   featureName,
-  UserTokenAction,
-  UserTokenEffects,
-  UserTokenName,
-  UserTokenReducer,
-  UserTokenSelector
+  UserActionToken,
+  UserEffectsToken,
+  UserNameToken,
+  UserReducerFunctionToken,
+  UserReducerToken,
+  UserSelectorToken
 } from './ngrx-tokens';
-
-export const reducerToken = new InjectionToken('reducer');
-
 
 @NgModule({
   declarations: [UserListComponent],
   imports: [
     CommonModule,
     UserRoutingModule,
-    NgRxHelperModule.forFeature(featureName, reducerToken, {
-      name: UserTokenName,
-      action: UserTokenAction,
-      effects: UserTokenEffects,
-      reducer: UserTokenReducer,
-      selector: UserTokenSelector,
+    NgRxHelperModule.forFeature(featureName, UserReducerFunctionToken, {
+      name: UserNameToken,
+      action: UserActionToken,
+      effects: UserEffectsToken,
+      reducer: UserReducerToken,
+      selector: UserSelectorToken,
     }),
-    StoreModule.forFeature(featureName, reducerToken),
+    StoreModule.forFeature(featureName, UserReducerFunctionToken),
     EffectsModule.forFeature([UserEffects]),
   ]
 })
