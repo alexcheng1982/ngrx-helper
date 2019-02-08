@@ -90,7 +90,7 @@ export function createReducerHelper<T extends Entity, E>(name: string): ReducerH
             }
           }
         case StoreActionType.INTERNAL:
-          switch (request[SymbolRequestType]) {
+          switch (storeAction[SymbolRequestType]) {
             case RequestType.DELETE:
               return {
                 ...state,

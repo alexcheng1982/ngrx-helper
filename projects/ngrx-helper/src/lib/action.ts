@@ -76,6 +76,8 @@ export function createActionHelper<T, E>(name: string, store: Store<any>): Actio
         id: actionId(),
         type: actionType(name, RequestType.DELETE, StoreActionType.INTERNAL),
         [SymbolEntity]: name,
+        [SymbolRequestType]: RequestType.DELETE,
+        [SymbolStoreActionType]: StoreActionType.INTERNAL,
         payload: action,
       };
     },
