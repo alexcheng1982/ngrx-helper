@@ -5,82 +5,54 @@ import { createActionHelper } from './action';
 import { Actions } from '@ngrx/effects';
 import { createEffectsHelper } from './effects';
 import { createSelectorHelper } from './selector';
-import { ActionHelper, Entity, ReducerHelper, EffectsHelper, SelectorHelper, Tokens, State } from './common';
+import { Entity, NgRxHelper, State } from './common';
 
-export function reducerHelperFactory(name: string) {
-  return createReducerHelper(name);
+export function reducerFactory<T extends Entity, E>(ngRxHelper: NgRxHelper<T, E>): (state: State<T, E>, action: any) => State<T, E> {
+  return ngRxHelper.reducer.reducer;
 }
 
-export function reducerFactory<T extends Entity, E>(reducerHelper: ReducerHelper<T, E>): (state: State<T, E>, action: any) => State<T, E> {
-  return reducerHelper.reducer;
-}
-
-export function actionHelperFactory<T, E>(name: string, store: Store<any>): ActionHelper<T, E> {
-  return createActionHelper(name, store);
-}
-
-export function effectsHelperFactory<T, E>(name: string, actionHelper: ActionHelper<T, E>, action$: Actions): EffectsHelper<T> {
-  return createEffectsHelper(name, actionHelper, action$);
-}
-
-export function selectorHelperFactory<T extends Entity, E>(name: string,
-                                                           store: Store<any>,
-                                                           reducerHelper: ReducerHelper<T, E>): SelectorHelper<T, E> {
-  return createSelectorHelper(name, reducerHelper, store);
+export function createHelper<T extends Entity, E>(name: string, store: Store<any>, action$: Actions): NgRxHelper<T, E> {
+  const reducerHelper = createReducerHelper<T, E>(name);
+  const actionHelper = createActionHelper<T, E>(name, store);
+  const effectsHelper = createEffectsHelper(name, actionHelper, action$);
+  const selectorHelper = createSelectorHelper(name, reducerHelper, store);
+  return {
+    reducer: reducerHelper,
+    action: actionHelper,
+    effects: effectsHelper,
+    selector: selectorHelper,
+  };
 }
 
 @NgModule()
 export class NgRxHelperModule {
   static forFeature<T extends Entity, E>(name: string,
+                                         nameToken: InjectionToken<string>,
                                          reducerToken: InjectionToken<ActionReducer<any, any>>,
-                                         tokens: Tokens<T, E>): ModuleWithProviders {
+                                         helperToken: InjectionToken<NgRxHelper<any, any>>): ModuleWithProviders {
     return {
       ngModule: NgRxHelperModule,
       providers: [
         {
-          provide: tokens.name,
+          provide: nameToken,
           useValue: name,
         },
         {
-          provide: tokens.reducer,
-          useFactory: reducerHelperFactory,
+          provide: helperToken,
+          useFactory: createHelper,
           deps: [
-            tokens.name
+            nameToken,
+            Store,
+            Actions,
           ],
         },
         {
           provide: reducerToken,
           useFactory: reducerFactory,
           deps: [
-            tokens.reducer,
+            helperToken,
           ],
         },
-        {
-          provide: tokens.action,
-          useFactory: actionHelperFactory,
-          deps: [
-            tokens.name,
-            Store,
-          ],
-        },
-        {
-          provide: tokens.effects,
-          useFactory: effectsHelperFactory,
-          deps: [
-            tokens.name,
-            tokens.action,
-            Actions,
-          ],
-        },
-        {
-          provide: tokens.selector,
-          useFactory: selectorHelperFactory,
-          deps: [
-            tokens.name,
-            Store,
-            tokens.reducer,
-          ],
-        }
       ],
     };
   }

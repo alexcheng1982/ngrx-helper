@@ -19,14 +19,11 @@ $ npm i @vividcode/ngrx-helper
 
 ### Create injection tokens
 
-You need to create a set of injection tokens for `ngrx-helper` to associate with created helper objects.
+You need to create three injection tokens for `ngrx-helper` to associate with created helper object.
 
 * For reducer function, used by NgRx and `ngrx-helper`
 * For feature name
-* For action helper
-* For reducer helper
-* For effects helper
-* For selector helper
+* For NgRx helper
 
 The code below shows a list of `InjectionToken`s for the feature `user`.
 
@@ -36,10 +33,7 @@ import { InjectionToken } from '@angular/core';
 export const featureName = 'user';
 export const UserReducerFunctionToken = new InjectionToken(`user reducer function`);
 export const UserNameToken = new InjectionToken(`user name`);
-export const UserActionToken = new InjectionToken(`user action`);
-export const UserReducerToken = new InjectionToken(`user reducer`);
-export const UserEffectsToken = new InjectionToken(`user effects`);
-export const UserSelectorToken = new InjectionToken(`user selector`);
+export const UserHelperToken = new InjectionToken(`user helper`);
 ```
 
 ### Import module
@@ -47,13 +41,7 @@ export const UserSelectorToken = new InjectionToken(`user selector`);
 In your own module, use `NgRxHelperModule.forFeature()` to create the module for the feature. `forFeature()` accepts parameters of the feature name, reducer function injection token and an object of other injection tokens.
 
 ```typescript
-NgRxHelperModule.forFeature(featureName, UserReducerFunctionToken, {
-  name: UserNameToken,
-  action: UserActionToken,
-  effects: UserEffectsToken,
-  reducer: UserReducerToken,
-  selector: UserSelectorToken,
-})
+NgRxHelperModule.forFeature(featureName, UserNameToken,  UserReducerFunctionToken, UserHelperToken)
 ```
 
 Then import the NgRx feature module using `StoreModule.forFeature`. Remember to use the injection token for the reducer function.

@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import uuid from 'uuid/v1';
 import {
-  ActionHelper,
+  ActionHelper, Entity,
   isStoreAction,
   RequestErrorAction,
   RequestSuccessAction,
@@ -56,7 +56,7 @@ const createErrorAction = <E, R>(name: string, error: E, requestAction: SendRequ
   payload: error,
 });
 
-export function createActionHelper<T, E>(name: string, store: Store<any>): ActionHelper<T, E> {
+export function createActionHelper<T extends Entity, E>(name: string, store: Store<any>): ActionHelper<T, E> {
   return {
     isSendRequestAction,
     createRequestAction<R>(requestType: RequestType, request: R = null): SendRequestAction<R> {

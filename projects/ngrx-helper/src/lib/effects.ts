@@ -1,10 +1,12 @@
-import { ActionHelper, RequestSender, RequestType, SendRequestAction, EffectsHelper } from './common';
+import { ActionHelper, RequestSender, RequestType, SendRequestAction, EffectsHelper, Entity } from './common';
 import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 
-export function createEffectsHelper<T, E>(name: string, actionHelper: ActionHelper<T, E>, actions$: Actions): EffectsHelper<T> {
+export function createEffectsHelper<T extends Entity, E>(name: string,
+                                                         actionHelper: ActionHelper<T, E>,
+                                                         actions$: Actions): EffectsHelper<T> {
 
   const effect = <R>(requestType: RequestType, requestSender: RequestSender<T, R>): Observable<Action> => {
     return actions$.pipe(

@@ -7,28 +7,14 @@ import { StoreModule } from '@ngrx/store';
 import { NgRxHelperModule } from '@vividcode/ngrx-helper';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './user.effects';
-import {
-  featureName,
-  UserActionToken,
-  UserEffectsToken,
-  UserNameToken,
-  UserReducerFunctionToken,
-  UserReducerToken,
-  UserSelectorToken
-} from './ngrx-tokens';
+import { featureName, UserHelperToken, UserNameToken, UserReducerFunctionToken } from './ngrx-tokens';
 
 @NgModule({
   declarations: [UserListComponent],
   imports: [
     CommonModule,
     UserRoutingModule,
-    NgRxHelperModule.forFeature(featureName, UserReducerFunctionToken, {
-      name: UserNameToken,
-      action: UserActionToken,
-      effects: UserEffectsToken,
-      reducer: UserReducerToken,
-      selector: UserSelectorToken,
-    }),
+    NgRxHelperModule.forFeature(featureName, UserNameToken,  UserReducerFunctionToken, UserHelperToken),
     StoreModule.forFeature(featureName, UserReducerFunctionToken),
     EffectsModule.forFeature([UserEffects]),
   ]

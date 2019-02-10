@@ -81,7 +81,7 @@ export interface ReducerHelper<T extends Entity, E> {
   actionsAdapter: EntityAdapter<ActionStatus<E>>;
 }
 
-export interface ActionHelper<T, E> {
+export interface ActionHelper<T extends Entity, E> {
   isSendRequestAction: (name: string, action: any, requestType: RequestType) => boolean;
   createRequestAction: <R>(requestType: RequestType, request?: R) => SendRequestAction<R>;
   createSuccessAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => RequestSuccessAction<T, R>;
@@ -92,7 +92,7 @@ export interface ActionHelper<T, E> {
   sendErrorAction: <R>(error: E, requestAction: SendRequestAction<R>) => void;
 }
 
-export interface EffectsHelper<T> {
+export interface EffectsHelper<T extends Entity> {
   listEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
   getEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
   createEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
@@ -114,4 +114,11 @@ export interface SelectorHelper<T extends Entity, E> {
   entitiesSelectTotal: Observable<number>;
   isActionLoading: (any) => Observable<boolean>;
   actionError: (action) => Observable<E>;
+}
+
+export interface NgRxHelper<T extends Entity, E> {
+  action: ActionHelper<T, E>;
+  reducer: ReducerHelper<T, E>;
+  effects: EffectsHelper<T>;
+  selector: SelectorHelper<T, E>;
 }

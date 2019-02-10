@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ActionHelper, RequestType, SelectorHelper } from '@vividcode/ngrx-helper';
+import { NgRxHelper, RequestType } from '@vividcode/ngrx-helper';
 import { Observable } from 'rxjs';
-import { UserSelectorToken, UserActionToken } from '../ngrx-tokens';
+import { UserHelperToken } from '../ngrx-tokens';
 
 @Component({
   selector: 'app-user-list',
@@ -12,11 +12,10 @@ export class UserListComponent implements OnInit {
   users$: Observable<any[]>;
   usersLoading$: Observable<boolean>;
 
-  constructor(@Inject(UserSelectorToken) private selectorHelper: SelectorHelper<any, any>,
-              @Inject(UserActionToken) private actionHelper: ActionHelper<any, any>) {
-    const requestAction = this.actionHelper.sendRequestAction(RequestType.LIST);
-    this.users$ = selectorHelper.entitiesSelectAll;
-    this.usersLoading$ = selectorHelper.isActionLoading(requestAction);
+  constructor(@Inject(UserHelperToken) private ngRxHelper: NgRxHelper<any, any>) {
+    const requestAction = ngRxHelper.action.sendRequestAction(RequestType.LIST);
+    this.users$ = ngRxHelper.selector.entitiesSelectAll;
+    this.usersLoading$ = ngRxHelper.selector.isActionLoading(requestAction);
   }
 
   ngOnInit() {
