@@ -91,10 +91,15 @@ export function createReducerHelper<T extends Entity, E>(name: string): ReducerH
           }
         case StoreActionType.INTERNAL:
           switch (storeAction[SymbolRequestType]) {
-            case RequestType.DELETE:
+            case RequestType.CLEAR_ACTION:
               return {
                 ...state,
                 actions: actionsAdapter.removeOne(action.payload.id || action.payload, state.actions),
+              };
+            case RequestType.CLEAR_DATA:
+              return {
+                ...state,
+                entities: entitiesAdapter.removeAll(state.entities),
               };
             default: {
               return state;

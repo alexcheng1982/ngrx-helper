@@ -71,15 +71,16 @@ export function createActionHelper<T extends Entity, E>(name: string, store: Sto
       return createErrorAction(name, error, requestAction);
     },
 
-    clearActionErrorAction(action: StoreAction | string) {
-      return {
+    clearAction(action: StoreAction | string) {
+      const clearAction: SendRequestAction<any> = {
         id: actionId(),
-        type: actionType(name, RequestType.DELETE, StoreActionType.INTERNAL),
+        type: actionType(name, RequestType.CLEAR_ACTION, StoreActionType.INTERNAL),
         [SymbolEntity]: name,
-        [SymbolRequestType]: RequestType.DELETE,
+        [SymbolRequestType]: RequestType.CLEAR_ACTION,
         [SymbolStoreActionType]: StoreActionType.INTERNAL,
         payload: action,
       };
+      store.dispatch(clearAction);
     },
 
     sendRequestAction<R>(requestType: RequestType, request?: R): SendRequestAction<R> {
@@ -98,7 +99,19 @@ export function createActionHelper<T extends Entity, E>(name: string, store: Sto
       const action = createErrorAction(name, error, requestAction);
       store.dispatch(action);
       return action;
-    }
+    },
+
+    clearData(): void {
+      const action: SendRequestAction<any> = {
+        id: actionId(),
+        type: actionType(name, RequestType.CLEAR_DATA, StoreActionType.INTERNAL),
+        [SymbolEntity]: name,
+        [SymbolRequestType]: RequestType.CLEAR_DATA,
+        [SymbolStoreActionType]: StoreActionType.INTERNAL,
+        payload: null,
+      };
+      store.dispatch(action);
+    },
 
   };
 }

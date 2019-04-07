@@ -16,6 +16,8 @@ export enum RequestType {
   CREATE,
   UPDATE,
   DELETE,
+  CLEAR_ACTION,
+  CLEAR_DATA,
 }
 
 export type RequestSender<T, R> = (request: R) => Observable<T[] | T | string>;
@@ -86,10 +88,11 @@ export interface ActionHelper<T extends Entity, E> {
   createRequestAction: <R>(requestType: RequestType, request?: R) => SendRequestAction<R>;
   createSuccessAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => RequestSuccessAction<T, R>;
   createErrorAction: <R>(error: E, requestAction: SendRequestAction<R>) => RequestErrorAction<R, E>;
-  clearActionErrorAction: (action: StoreAction | string) => any;
+  clearAction: (action: StoreAction | string) => void;
   sendRequestAction: <R>(requestType: RequestType, request?: R) => void;
   sendSuccessAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => void;
   sendErrorAction: <R>(error: E, requestAction: SendRequestAction<R>) => void;
+  clearData: () => void;
 }
 
 export interface EffectsHelper<T extends Entity> {
