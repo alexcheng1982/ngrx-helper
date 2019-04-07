@@ -58,6 +58,7 @@ const createErrorAction = <E, R>(name: string, error: E, requestAction: SendRequ
 
 export function createActionHelper<T extends Entity, E>(name: string, store: Store<any>): ActionHelper<T, E> {
   return {
+    actionType,
     isSendRequestAction,
     createRequestAction<R>(requestType: RequestType, request: R = null): SendRequestAction<R> {
       return createRequestAction(name, requestType, request);

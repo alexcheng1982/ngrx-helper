@@ -1,4 +1,3 @@
-import { InjectionToken } from '@angular/core';
 import { Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Observable } from 'rxjs';
 import { Action, Selector } from '@ngrx/store';
@@ -69,14 +68,6 @@ export interface State<T extends Entity, E> {
   actions: EntityState<ActionStatus<E>>;
 }
 
-export interface Tokens<T extends Entity, E> {
-  name: InjectionToken<string>;
-  action: InjectionToken<ActionHelper<T, E>>;
-  reducer: InjectionToken<ReducerHelper<T, E>>;
-  effects: InjectionToken<EffectsHelper<T>>;
-  selector: InjectionToken<SelectorHelper<T, E>>;
-}
-
 export interface ReducerHelper<T extends Entity, E> {
   reducer: (state: State<T, E>, action: any) => State<T, E>;
   entitiesAdapter: EntityAdapter<T>;
@@ -84,6 +75,7 @@ export interface ReducerHelper<T extends Entity, E> {
 }
 
 export interface ActionHelper<T extends Entity, E> {
+  actionType: (name: string, requestType: RequestType, storeActionType: StoreActionType) => string;
   isSendRequestAction: (name: string, action: any, requestType: RequestType) => boolean;
   createRequestAction: <R>(requestType: RequestType, request?: R) => SendRequestAction<R>;
   createSuccessAction: <R>(data: T[] | T | string, requestAction: SendRequestAction<R>) => RequestSuccessAction<T, R>;

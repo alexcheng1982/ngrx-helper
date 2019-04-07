@@ -38,7 +38,7 @@ export const UserHelperToken = new InjectionToken(`user helper`);
 
 ### Import module
 
-In your own module, use `NgRxHelperModule.forFeature()` to create the module for the feature. `forFeature()` accepts parameters of the feature name, reducer function injection token and an object of other injection tokens.
+In your own module, use `NgRxHelperModule.forFeature()` to create the module for the feature. `forFeature()` accepts parameters of the feature name, feature name injection token, reducer function injection token and helper injection token.
 
 ```typescript
 NgRxHelperModule.forFeature(featureName, UserNameToken,  UserReducerFunctionToken, UserHelperToken)
