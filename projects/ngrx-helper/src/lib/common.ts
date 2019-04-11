@@ -9,14 +9,17 @@ export enum StoreActionType {
   INTERNAL,
 }
 
-export enum RequestType {
-  LIST,
-  GET,
-  CREATE,
-  UPDATE,
-  DELETE,
-  CLEAR_ACTION,
-  CLEAR_DATA,
+export class RequestType {
+  constructor(public name: string) {
+  }
+
+  static LIST = new RequestType('LIST');
+  static GET = new RequestType('GET');
+  static CREATE = new RequestType('CREATE');
+  static UPDATE = new RequestType('UPDATE');
+  static DELETE = new RequestType('DELETE');
+  static CLEAR_ACTION = new RequestType('CLEAR_ACTION');
+  static CLEAR_DATA = new RequestType('CLEAR_DATA');
 }
 
 export type RequestSender<T, R> = (request: R) => Observable<T[] | T | string>;
@@ -88,11 +91,24 @@ export interface ActionHelper<T extends Entity, E> {
 }
 
 export interface EffectsHelper<T extends Entity> {
-  listEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  getEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  createEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  updateEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
-  deleteEffect: <R>(requestSender: RequestSender<T, R>) => Observable<Action>;
+  listEffect: <R>(requestSender: RequestSender<T, R>,
+                  successActions?: Observable<Action>,
+                  errorActions?: Observable<Action>) => Observable<Action>;
+  getEffect: <R>(requestSender: RequestSender<T, R>,
+                 successActions?: Observable<Action>,
+                 errorActions?: Observable<Action>) => Observable<Action>;
+  createEffect: <R>(requestSender: RequestSender<T, R>,
+                    successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) => Observable<Action>;
+  updateEffect: <R>(requestSender: RequestSender<T, R>,
+                    successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) => Observable<Action>;
+  deleteEffect: <R>(requestSender: RequestSender<T, R>,
+                    successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) => Observable<Action>;
+  customEffect: <R>(requestType: RequestType,
+                    requestSender: RequestSender<T, R>, successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) => Observable<Action>;
 }
 
 

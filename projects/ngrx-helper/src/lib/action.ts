@@ -25,7 +25,7 @@ const isSendRequestAction = (name: string, action: any, requestType: RequestType
 const actionId = () => uuid();
 
 const actionType = (name: string, requestType: RequestType, storeActionType: StoreActionType) =>
-  `NgRxHelper_${name}_${RequestType[requestType]}_${StoreActionType[storeActionType]}`;
+  `NgRxHelper_${name}_${requestType.name}_${StoreActionType[storeActionType]}`;
 
 const createRequestAction = <R>(name: string, requestType: RequestType, request: R = null): SendRequestAction<R> => ({
   id: actionId(),

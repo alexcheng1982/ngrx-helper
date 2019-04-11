@@ -1,6 +1,6 @@
-import { ActionHelper, RequestSender, RequestType, SendRequestAction, EffectsHelper, Entity } from './common';
-import { catchError, filter, map, mergeMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { ActionHelper, EffectsHelper, Entity, RequestSender, RequestType, SendRequestAction } from './common';
+import { catchError, filter, mergeMap } from 'rxjs/operators';
+import { EMPTY, merge, Observable, of } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 
@@ -8,35 +8,55 @@ export function createEffectsHelper<T extends Entity, E>(name: string,
                                                          actionHelper: ActionHelper<T, E>,
                                                          actions$: Actions): EffectsHelper<T> {
 
-  const effect = <R>(requestType: RequestType, requestSender: RequestSender<T, R>): Observable<Action> => {
+  const effect = <R>(requestType: RequestType,
+                     requestSender: RequestSender<T, R>,
+                     successActions: Observable<Action> = EMPTY,
+                     errorActions: Observable<Action> = EMPTY): Observable<Action> => {
     return actions$.pipe(
       filter(action => actionHelper.isSendRequestAction(name, action, requestType)),
       mergeMap((action: SendRequestAction<R>) => requestSender(action.payload).pipe(
-        map(response => actionHelper.createSuccessAction(response, action)),
-        catchError(error => of(actionHelper.createErrorAction(error, action)))
+        mergeMap(response => merge(of(actionHelper.createSuccessAction(response, action)), successActions)),
+        catchError(error => merge(of(actionHelper.createErrorAction(error, action)), errorActions))
       )),
     );
   };
 
   return {
-    listEffect<R>(requestSender: RequestSender<T, R>) {
-      return effect(RequestType.LIST, requestSender);
+    listEffect<R>(requestSender: RequestSender<T, R>,
+                  successActions?: Observable<Action>,
+                  errorActions?: Observable<Action>) {
+      return effect(RequestType.LIST, requestSender, successActions, errorActions);
     },
 
-    getEffect<R>(requestSender: RequestSender<T, R>) {
-      return effect(RequestType.GET, requestSender);
+    getEffect<R>(requestSender: RequestSender<T, R>,
+                 successActions?: Observable<Action>,
+                 errorActions?: Observable<Action>) {
+      return effect(RequestType.GET, requestSender, successActions, errorActions);
     },
 
-    createEffect<R>(requestSender: RequestSender<T, R>) {
-      return effect(RequestType.CREATE, requestSender);
+    createEffect<R>(requestSender: RequestSender<T, R>,
+                    successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) {
+      return effect(RequestType.CREATE, requestSender, successActions, errorActions);
     },
 
-    updateEffect<R>(requestSender: RequestSender<T, R>) {
-      return effect(RequestType.UPDATE, requestSender);
+    updateEffect<R>(requestSender: RequestSender<T, R>,
+                    successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) {
+      return effect(RequestType.UPDATE, requestSender, successActions, errorActions);
     },
 
-    deleteEffect<R>(requestSender: RequestSender<T, R>) {
-      return effect(RequestType.DELETE, requestSender);
+    deleteEffect<R>(requestSender: RequestSender<T, R>,
+                    successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) {
+      return effect(RequestType.DELETE, requestSender, successActions, errorActions);
+    },
+
+    customEffect<R>(requestType: RequestType,
+                    requestSender: RequestSender<T, R>,
+                    successActions?: Observable<Action>,
+                    errorActions?: Observable<Action>) {
+      return effect(requestType, requestSender, successActions, errorActions);
     },
   };
 }

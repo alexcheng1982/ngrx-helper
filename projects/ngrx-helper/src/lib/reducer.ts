@@ -86,7 +86,10 @@ export function createReducerHelper<T extends Entity, E>(name: string): ReducerH
               };
             }
             default: {
-              return state;
+              return {
+                ...state,
+                actions,
+              };
             }
           }
         case StoreActionType.INTERNAL:
