@@ -1,9 +1,9 @@
 <div>
   <h2>Users</h2>
-  <div *ngIf="usersLoading$ | async">
+  <div *ngIf="usersLoading$ | async; else userList">
     Loading...
   </div>
-  <div *ngIf="!(usersLoading$ | async)">
+  <ng-template #userList>
     <table>
       <thead>
       <th>Username</th>
@@ -20,5 +20,5 @@
       </tr>
       </tbody>
     </table>
-  </div>
+  </ng-template>
 </div>
