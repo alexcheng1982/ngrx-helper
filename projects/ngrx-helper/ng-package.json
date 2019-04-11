@@ -9,7 +9,9 @@
       "@ngrx/effects": "@ngrx/effects",
       "@ngrx/entity": "@ngrx/entity",
       "@ngrx/store": "@ngrx/store",
-      "uuid/v1": "uuid"
+      "uuid/v1": "uuid",
+      "lodash.get": "lodash.get",
+      "lodash.some": "lodash.some"
     }
   }
 }

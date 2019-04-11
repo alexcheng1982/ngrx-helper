@@ -1,6 +1,6 @@
 {
   "name": "@vividcode/ngrx-helper",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "author": {
     "name": "Fu Cheng"
   },
@@ -19,7 +19,9 @@
     "@ngrx/effects": ">=6.1.2",
     "@ngrx/entity": ">=6.1.2",
     "@ngrx/store": ">=6.1.2",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "lodash.get": "^4.4.2",
+    "lodash.some": "^4.6.0"
   },
   "repository": {
     "type": "git",

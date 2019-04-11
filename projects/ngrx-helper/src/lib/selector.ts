@@ -1,6 +1,17 @@
-import { Entity, ReducerHelper, SelectorHelper, State } from './common';
+import {
+  ActionStatus,
+  Entity,
+  ReducerHelper,
+  RequestType,
+  SelectorHelper,
+  State,
+  StoreActionType,
+  SymbolRequestType,
+  SymbolStoreActionType
+} from './common';
 import { createFeatureSelector, createSelector, select, Store } from '@ngrx/store';
-
+import get from 'lodash.get';
+import some from 'lodash.some';
 
 export function createSelectorHelper<T extends Entity, E>(name: string,
                                                           reducerHelper: ReducerHelper<T, E>,
@@ -25,6 +36,11 @@ export function createSelectorHelper<T extends Entity, E>(name: string,
     reducerHelper.actionsAdapter.getSelectors().selectEntities,
   );
 
+  const selectActionStatusAll = createSelector(
+    actionsSelector,
+    reducerHelper.actionsAdapter.getSelectors().selectAll,
+  );
+
   const entitiesSelectAllSelector = createSelector(
     entitiesSelector,
     selectAll,
@@ -47,12 +63,21 @@ export function createSelectorHelper<T extends Entity, E>(name: string,
 
   const isActionLoadingSelector = (action: any) => createSelector(
     selectActionStatus,
-    status => status[action.id] && status[action.id].loading,
+    status => get(status, [action.id, 'loading'], false),
   );
+
   const actionErrorSelector = (action: any) => createSelector(
     selectActionStatus,
-    status => status[action.id] && status[action.id].error,
+    status => get(status, [action.id, 'error'], null),
   );
+
+  const hasPendingActionsSelector = (type: RequestType) => createSelector(
+    selectActionStatusAll,
+    statuses => some(statuses, (status: ActionStatus<any>) =>
+      status.action[SymbolStoreActionType] === StoreActionType.REQUEST && status.action[SymbolRequestType] === type
+    )
+  );
+
   return {
     entitiesSelectAllSelector,
     entitiesSelectEntitiesSelector,
@@ -60,11 +85,13 @@ export function createSelectorHelper<T extends Entity, E>(name: string,
     entitiesSelectTotalSelector,
     isActionLoadingSelector,
     actionErrorSelector,
+    hasPendingActionsSelector,
     entitiesSelectAll: store.pipe(select(entitiesSelectAllSelector)),
     entitiesSelectEntities: store.pipe(select(entitiesSelectEntitiesSelector)),
     entitiesSelectIds: store.pipe(select(entitiesSelectIdsSelector)),
     entitiesSelectTotal: store.pipe(select(entitiesSelectTotalSelector)),
     isActionLoading: (action: any) => store.pipe(select(isActionLoadingSelector(action))),
     actionError: (action: any) => store.pipe(select(actionErrorSelector(action))),
+    hasPendingActions: (type: RequestType) => store.pipe(select(hasPendingActionsSelector(type))),
   };
 }

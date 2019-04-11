@@ -103,12 +103,14 @@ export interface SelectorHelper<T extends Entity, E> {
   entitiesSelectTotalSelector: Selector<State<T, E>, number>;
   isActionLoadingSelector: (any) => Selector<State<T, E>, boolean>;
   actionErrorSelector: (any) => Selector<State<T, E>, E>;
+  hasPendingActionsSelector: (type: RequestType) => Selector<State<T, E>, boolean>;
   entitiesSelectAll: Observable<T[]>;
   entitiesSelectEntities: Observable<Dictionary<T>>;
   entitiesSelectIds: Observable<number[] | string[]>;
   entitiesSelectTotal: Observable<number>;
   isActionLoading: (any) => Observable<boolean>;
   actionError: (action) => Observable<E>;
+  hasPendingActions: (type: RequestType) => Observable<boolean>;
 }
 
 export interface NgRxHelper<T extends Entity, E> {
