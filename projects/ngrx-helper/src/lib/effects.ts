@@ -52,6 +52,30 @@ export function createEffectsHelper<T extends Entity, E>(name: string,
       return effect(RequestType.DELETE, requestSender, successActions, errorActions);
     },
 
+    getSingleEffect<R>(requestSender: RequestSender<T, R>,
+                       successActions?: Observable<Action>,
+                       errorActions?: Observable<Action>) {
+      return effect(RequestType.GET_SINGLE, requestSender, successActions, errorActions);
+    },
+
+    createSingleEffect<R>(requestSender: RequestSender<T, R>,
+                          successActions?: Observable<Action>,
+                          errorActions?: Observable<Action>) {
+      return effect(RequestType.CREATE_SINGLE, requestSender, successActions, errorActions);
+    },
+
+    updateSingleEffect<R>(requestSender: RequestSender<T, R>,
+                          successActions?: Observable<Action>,
+                          errorActions?: Observable<Action>) {
+      return effect(RequestType.UPDATE_SINGLE, requestSender, successActions, errorActions);
+    },
+
+    deleteSingleEffect<R>(requestSender: RequestSender<T, R>,
+                          successActions?: Observable<Action>,
+                          errorActions?: Observable<Action>) {
+      return effect(RequestType.DELETE_SINGLE, requestSender, successActions, errorActions);
+    },
+
     customEffect<R>(requestType: RequestType,
                     requestSender: RequestSender<T, R>,
                     successActions?: Observable<Action>,

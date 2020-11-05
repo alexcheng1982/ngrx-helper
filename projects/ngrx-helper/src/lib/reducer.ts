@@ -12,7 +12,7 @@ import {
   SymbolStoreActionType,
   ReducerHelper,
   ActionStatus,
-  State,
+  State, SINGLE_ITEM_ID,
 } from './common';
 
 
@@ -85,6 +85,21 @@ export function createReducerHelper<T extends Entity, E>(name: string): ReducerH
                 actions,
               };
             }
+            case RequestType.GET_SINGLE:
+            case RequestType.UPDATE_SINGLE:
+            case RequestType.CREATE_SINGLE:
+              return {
+                entities: entitiesAdapter.upsertOne({
+                  ...(payload as T),
+                  id: SINGLE_ITEM_ID,
+                }, state.entities),
+                actions,
+              };
+            case RequestType.DELETE_SINGLE:
+              return {
+                entities: entitiesAdapter.removeOne(SINGLE_ITEM_ID, state.entities),
+                actions,
+              };
             default: {
               return {
                 ...state,

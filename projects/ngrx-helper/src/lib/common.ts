@@ -2,6 +2,8 @@ import { Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Observable } from 'rxjs';
 import { Action, Selector } from '@ngrx/store';
 
+export const SINGLE_ITEM_ID = '__single__';
+
 export enum StoreActionType {
   REQUEST,
   SUCCESS,
@@ -18,6 +20,10 @@ export class RequestType {
   static CREATE = new RequestType('CREATE');
   static UPDATE = new RequestType('UPDATE');
   static DELETE = new RequestType('DELETE');
+  static GET_SINGLE = new RequestType('GET_SINGLE');
+  static CREATE_SINGLE = new RequestType('CREATE_SINGLE');
+  static UPDATE_SINGLE = new RequestType('UPDATE_SINGLE');
+  static DELETE_SINGLE = new RequestType('DELETE_SINGLE');
   static CLEAR_ACTION = new RequestType('CLEAR_ACTION');
   static CLEAR_DATA = new RequestType('CLEAR_DATA');
 }
@@ -106,6 +112,18 @@ export interface EffectsHelper<T extends Entity> {
   deleteEffect: <R>(requestSender: RequestSender<T, R>,
                     successActions?: Observable<Action>,
                     errorActions?: Observable<Action>) => Observable<Action>;
+  getSingleEffect: <R>(requestSender: RequestSender<T, R>,
+                       successActions?: Observable<Action>,
+                       errorActions?: Observable<Action>) => Observable<Action>;
+  createSingleEffect: <R>(requestSender: RequestSender<T, R>,
+                          successActions?: Observable<Action>,
+                          errorActions?: Observable<Action>) => Observable<Action>;
+  updateSingleEffect: <R>(requestSender: RequestSender<T, R>,
+                          successActions?: Observable<Action>,
+                          errorActions?: Observable<Action>) => Observable<Action>;
+  deleteSingleEffect: <R>(requestSender: RequestSender<T, R>,
+                          successActions?: Observable<Action>,
+                          errorActions?: Observable<Action>) => Observable<Action>;
   customEffect: <R>(requestType: RequestType,
                     requestSender: RequestSender<T, R>, successActions?: Observable<Action>,
                     errorActions?: Observable<Action>) => Observable<Action>;
@@ -117,6 +135,7 @@ export interface SelectorHelper<T extends Entity, E> {
   entitiesSelectEntitiesSelector: Selector<State<T, E>, Dictionary<T>>;
   entitiesSelectIdsSelector: Selector<State<T, E>, number[] | string[]>;
   entitiesSelectTotalSelector: Selector<State<T, E>, number>;
+  entitiesSelectSingleSelector: Selector<State<T, E>, T>;
   isActionLoadingSelector: (any) => Selector<State<T, E>, boolean>;
   actionErrorSelector: (any) => Selector<State<T, E>, E>;
   hasPendingActionsSelector: (type: RequestType) => Selector<State<T, E>, boolean>;
@@ -124,6 +143,7 @@ export interface SelectorHelper<T extends Entity, E> {
   entitiesSelectEntities: Observable<Dictionary<T>>;
   entitiesSelectIds: Observable<number[] | string[]>;
   entitiesSelectTotal: Observable<number>;
+  entitiesSelectSingle: Observable<T>;
   isActionLoading: (any) => Observable<boolean>;
   actionError: (action) => Observable<E>;
   hasPendingActions: (type: RequestType) => Observable<boolean>;

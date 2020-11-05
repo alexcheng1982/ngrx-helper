@@ -3,7 +3,7 @@ import {
   Entity,
   ReducerHelper,
   RequestType,
-  SelectorHelper,
+  SelectorHelper, SINGLE_ITEM_ID,
   State,
   StoreActionType,
   SymbolRequestType,
@@ -61,6 +61,11 @@ export function createSelectorHelper<T extends Entity, E>(name: string,
     selectTotal,
   );
 
+  const entitiesSelectSingleSelector = createSelector(
+    entitiesSelectEntitiesSelector,
+    entities => get(entities, SINGLE_ITEM_ID, null),
+  );
+
   const isActionLoadingSelector = (action: any) => createSelector(
     selectActionStatus,
     status => get(status, [action.id, 'loading'], false),
@@ -83,6 +88,7 @@ export function createSelectorHelper<T extends Entity, E>(name: string,
     entitiesSelectEntitiesSelector,
     entitiesSelectIdsSelector,
     entitiesSelectTotalSelector,
+    entitiesSelectSingleSelector,
     isActionLoadingSelector,
     actionErrorSelector,
     hasPendingActionsSelector,
@@ -90,6 +96,7 @@ export function createSelectorHelper<T extends Entity, E>(name: string,
     entitiesSelectEntities: store.pipe(select(entitiesSelectEntitiesSelector)),
     entitiesSelectIds: store.pipe(select(entitiesSelectIdsSelector)),
     entitiesSelectTotal: store.pipe(select(entitiesSelectTotalSelector)),
+    entitiesSelectSingle: store.pipe(select(entitiesSelectSingleSelector)),
     isActionLoading: (action: any) => store.pipe(select(isActionLoadingSelector(action))),
     actionError: (action: any) => store.pipe(select(actionErrorSelector(action))),
     hasPendingActions: (type: RequestType) => store.pipe(select(hasPendingActionsSelector(type))),
