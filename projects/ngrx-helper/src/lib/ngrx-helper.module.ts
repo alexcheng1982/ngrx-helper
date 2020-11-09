@@ -29,7 +29,7 @@ export class NgRxHelperModule {
   static forFeature<T extends Entity, E>(name: string,
                                          nameToken: InjectionToken<string>,
                                          reducerToken: InjectionToken<ActionReducer<any, any>>,
-                                         helperToken: InjectionToken<NgRxHelper<any, any>>): ModuleWithProviders {
+                                         helperToken: InjectionToken<NgRxHelper<any, any>>): ModuleWithProviders<NgRxHelperModule> {
     return {
       ngModule: NgRxHelperModule,
       providers: [

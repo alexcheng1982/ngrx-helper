@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import uuid from 'uuid/v1';
+import uuid from 'uuid';
 import {
   ActionHelper, Entity,
   isStoreAction,
