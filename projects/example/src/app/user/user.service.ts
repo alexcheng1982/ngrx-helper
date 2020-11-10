@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as faker from 'faker';
 import { from } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import * as range from 'lodash.range';
 
 @Injectable({
